@@ -115,7 +115,7 @@ export class HistoryStore {
 
   filterHistoryValues(status: string[], itemId: string, fullText: string, date: DateObject[]) {
     if (
-      status.length === 0 && 
+      status.length === 0 &&
       (!itemId || itemId.length === 0) &&
       fullText.length === 0 &&
       date.length === 0
@@ -126,54 +126,51 @@ export class HistoryStore {
     }
 
     this.filters = {
-      status, itemId, fullText, date: date.map(item => item.toString())
+      status,
+      itemId,
+      fullText,
+      date: date.map(d => d.toString())
     };
 
     this.page = 1;
 
     const lowerQuery = fullText.toLowerCase().trim();
-    const start = new Date(date.map(item => item.toString())[0]);
-    const end = new Date(date.map(item => item.toString())[1]);
+    let start: Date | null = null;
+    let end: Date | null = null;
+    if (date.length === 2) {
+      start = new Date(date[0].toString());
+      end = new Date(date[1].toString());
+    }
+
+    let values = this.historyValues;
 
     if (lowerQuery.length !== 0) {
-      const values = this.filteredValues.length === 0 ? this.historyValues : this.filteredValues;
-
-      this.filteredValues = values.filter((r) => {
-        return (
-          r.employeeId.toLowerCase().includes(lowerQuery) ||
-          r.itemId.toLowerCase().includes(lowerQuery)
-        );
-      });
+      values = values.filter(r =>
+        r.employeeId.toLowerCase().includes(lowerQuery) ||
+        r.itemId.toLowerCase().includes(lowerQuery)
+      );
     }
 
     if (itemId && itemId.length !== 0) {
-      const values = this.filteredValues.length === 0 ? this.historyValues : this.filteredValues;
-
-      this.filteredValues = values.filter((r) => {
-        return (
-          r.itemId === itemId 
-        );
-      });
+      values = values.filter(r =>
+        r.itemId === itemId
+      );
     }
 
     if (status.length !== 0) {
-      const values = this.filteredValues.length === 0 ? this.historyValues : this.filteredValues;
+      values = values.filter(r =>
+        status.includes(r.status)
+      );
+    }
 
-      this.filteredValues = values.filter((r) => {
-        return (
-          status.includes(r.status)
-        );
+    if (start && end) {
+      values = values.filter(r => {
+        const recordDate = new Date(r.date);
+        return recordDate >= start && recordDate <= end;
       });
     }
 
-    if (date.length !== 0) {
-      const values = this.filteredValues.length === 0 ? this.historyValues : this.filteredValues;
-
-      this.filteredValues = values.filter((r) => {
-        const date = new Date(r.date);
-        return date >= start && date <= end;
-      });
-    }
+    this.filteredValues = values;
   }
 
   resetChanges() {
