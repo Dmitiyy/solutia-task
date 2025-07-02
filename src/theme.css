@@ -1,0 +1,25 @@
+:root {
+  --bs-primary-rgb: 9, 22, 244;
+  --bs-secondary-rgb: 233, 244, 255;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) > * {
+  --bs-table-striped-bg: rgba(231, 243, 255, 1);
+}
+
+body {
+  background-color: #D2D2D2;
+}
+
+@media (min-width: 768px) {
+  .height-up-to-md {
+    min-height: calc(100vh - 3rem);
+  }
+}
+
+@media (max-width: 768px) {
+  .row-gap {
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+}
