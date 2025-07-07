@@ -50,46 +50,54 @@ export const History = observer(() => {
         </Button>
       </div>
 
-      <div className="overflow-x-scroll">
-        <Table striped hover className="mt-3">
-          <thead>
-            <tr>
-              <th></th>
-              <th>Date</th>
-              <th>Employee ID</th>
-              <th>Uniform</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {
-              paginatedValues.map((item, index) => {
-                return (
-                  <tr key={item.id}>
-                    <td>{ index + 1 }</td>
-                    <td>{ item.date }</td>
-                    <td>{ item.employeeId }</td>
-                    <td>{ item.itemId }</td>
-                    <td>
-                      <StatusBadge status={item.status} /> 
-                    </td>
+      {
+        paginatedValues.length !== 0 ? (
+          <>
+            <div className="overflow-x-scroll">
+              <Table striped hover className="mt-3">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>Date</th>
+                    <th>Employee ID</th>
+                    <th>Uniform</th>
+                    <th>Status</th>
                   </tr>
-                )
-              })
-            }
-          </tbody>
-        </Table>
-      </div>
+                </thead>
+                <tbody>
+                  {
+                    paginatedValues.map((item, index) => {
+                      return (
+                        <tr key={item.id}>
+                          <td>{ index + 1 }</td>
+                          <td>{ item.date }</td>
+                          <td>{ item.employeeId }</td>
+                          <td>{ item.itemId }</td>
+                          <td>
+                            <StatusBadge status={item.status} /> 
+                          </td>
+                        </tr>
+                      )
+                    })
+                  }
+                </tbody>
+              </Table>
+            </div>
 
-      <div className="mt-3 d-flex align-items-center justify-content-center gap-3">
-        <Button onClick={() => { reservationApi.goToPrev() }}>
-          <i className="bi bi-arrow-left" />
-        </Button>
-        <h3 className="fs-5">{historyStore.page}</h3>
-        <Button onClick={() => { reservationApi.goToNext() }}>
-          <i className="bi bi-arrow-right" />
-        </Button>
-      </div>
+            <div className="mt-3 d-flex align-items-center justify-content-center gap-3">
+              <Button onClick={() => { reservationApi.goToPrev() }}>
+                <i className="bi bi-arrow-left" />
+              </Button>
+              <h3 className="fs-5">{historyStore.page}</h3>
+              <Button onClick={() => { reservationApi.goToNext() }}>
+                <i className="bi bi-arrow-right" />
+              </Button>
+            </div>
+          </>
+        ) : (
+          <p className="text-center fs-5">There are no items</p>
+        )
+      }
 
       <FiltersModal 
         modalVisible={modalVisible} 
